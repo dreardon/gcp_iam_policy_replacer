@@ -15,3 +15,10 @@ dan@old_email.com,dan@new_email.com
 test@old_email.com,A12345@new_email.com
 manager@old_email.com,Z54321@new_email.com
 ```
+
+Script Execution:  The script expects an organization id and CSV file name to be passed in:
+
+```
+./migrate.sh -o [ORG_ID] -f [FILE_NAME]
+./migrate.sh -o 123456 -f ad_mappings.csv
+```
