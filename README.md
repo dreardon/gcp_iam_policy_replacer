@@ -23,6 +23,9 @@ Script Execution:  The script expects an organization id and CSV file name to be
 ./migrate.sh -o 123456 -f ad_mappings.csv
 ```
 
+## TODO
+Iterate resources under a project which can contain granted permissions (Big Query Datasets, Big Query Tables, etc.)
+
 ## Migrate Groups
 
 ### Existing Cloud Identity: Gather Groups and Generate Update Scripts
