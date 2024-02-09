@@ -22,10 +22,6 @@ Script Execution:  The script expects an organization id and CSV file name to be
 ./migrate.sh -o [ORG_ID] -f [FILE_NAME]
 ./migrate.sh -o 123456 -f ad_mappings.csv
 ```
-
-## TODO
-Iterate resources under a project which can contain granted permissions (Big Query Datasets, Big Query Tables, etc.)
-
 ## Migrate Groups
 
 ### Existing Cloud Identity: Gather Groups and Generate Update Scripts
@@ -35,6 +31,7 @@ PROJECT_ID=[Project ID]
 
 printf 'y' |  gcloud services enable cloudresourcemanager.googleapis.com
 printf 'y' |  gcloud services enable cloudidentity.googleapis.com
+printf 'y' |  gcloud services enable cloudasset.googleapis.com
 
 gcloud config set project ${PROJECT_ID}
 
@@ -63,7 +60,6 @@ done
 
 ### New Cloud Identity: Execute Update Scripts
 ```
-#TODO Replace old group and user emails with updated emails
 
 #Run the script to generate groups
 ./create_groups.sh
@@ -72,3 +68,7 @@ done
 ./create_group_${EMAIL}.txt
 
 ```
+
+## TODO
+- Iterate resources under a project which can contain granted permissions (BigQuery Datasets, BigQuery Tables, etc.)
+- Replace old group and user emails with updated emails in the "Gather Groups and Generate Update Scripts" section

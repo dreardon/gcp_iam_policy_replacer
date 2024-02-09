@@ -20,7 +20,7 @@ if [ -z "$FILE" ]; then
     exit 1
 fi
 
-prjs=( $(gcloud projects list --format="value(projectId)") )
+prjs=( $(gcloud asset search-all-resources --scope=organizations/$ORGANIZATION_ID --asset-types='cloudresourcemanager.googleapis.com/Project' --format="value(additionalAttributes.projectId)") )
 for p in "${prjs[@]}"
     do
         echo "##########################################################"
@@ -40,23 +40,23 @@ for p in "${prjs[@]}"
         fi
         echo "##########################################################"
     done
-fldrs=( $(gcloud resource-manager folders list --organization $ORGANIZATION_ID --format="value(name)") )
+fldrs=( $(gcloud asset search-all-resources --scope=organizations/$ORGANIZATION_ID --asset-types='cloudresourcemanager.googleapis.com/Folder' --format="value(name)") )
 for f in "${fldrs[@]}"
     do
         echo "##########################################################"
-        echo "Collecting IAM roles & users for Folder: $f"
-        gcloud resource-manager folders get-iam-policy $f > folder_${f}_old_policy.yaml
-        cp folder_${f}_old_policy.yaml folder_${f}_updated_policy.yaml
+        echo "Collecting IAM roles & users for Folder: ${f##*/}"
+        gcloud resource-manager folders get-iam-policy ${f##*/} > folder_${f##*/}_old_policy.yaml
+        cp folder_${f##*/}_old_policy.yaml folder_${f##*/}_updated_policy.yaml
         cut -d, -f1 ${FILE} | tail -n +2 | while read email; do
             new_value=$(awk -F, -v term="$email" '$1 == term {print $2}' ${FILE})
-            sed -i '' -e "s/$email/$new_value/g" folder_${f}_updated_policy.yaml
+            sed -i '' -e "s/$email/$new_value/g" folder_${f##*/}_updated_policy.yaml
         done 
-        if cmp -s folder_${f}_old_policy.yaml folder_${f}_updated_policy.yaml; then
+        if cmp -s folder_${f##*/}_old_policy.yaml folder_${f##*/}_updated_policy.yaml; then
             echo "Files are identical"
-            rm folder_${f}_old_policy.yaml folder_${f}_updated_policy.yaml
+            rm folder_${f##*/}_old_policy.yaml folder_${f##*/}_updated_policy.yaml
         else
-            echo "folder_${f}_updated_policy.yaml is different"
-            gcloud resource-manager folders set-iam-policy $f folder_${f}_updated_policy.yaml
+            echo "folder_${f##*/}_updated_policy.yaml is different"
+            gcloud resource-manager folders set-iam-policy ${f##*/} folder_${f##*/}_updated_policy.yaml
         fi
         echo "##########################################################"
     done
