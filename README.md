@@ -1,6 +1,6 @@
 # IAM Policy Replacer
 
-This script is designed to streamline the process of updating Google IAM policies with new email addresses. It's ideal for situations where user email addresses change on a larger scale (e.g., company email domain change).
+This script is designed to streamline the process of updating Google IAM policies with new email addresses. It's ideal for situations where user email addresses change on a larger scale (e.g., company email domain change). This script works for resource policies bound at the Organization, Folder, or Project level. See a note below for how to determine permissions for resources-level bindings under a project.
 
 ## Google Disclaimer
 This is not an officially supported Google product
@@ -22,6 +22,16 @@ Script Execution:  The script expects an organization id and CSV file name to be
 ./migrate.sh -o [ORG_ID] -f [FILE_NAME]
 ./migrate.sh -o 123456 -f ad_mappings.csv
 ```
+
+## Resource-based Permissions
+Google's Cloud Asset Inventory (CAI) feature has a feature [which](https://cloud.google.com/sdk/gcloud/reference/asset/search-all-iam-policies) searches all IAM policies within the specified accessible scope, such as a project, folder or organization. Examples of this binding include BigQuery Datasets or Tables, KMS Keys, Individual Secrets in Secret Manager, Cloud Run Invoker permissions on a single service and many more.
+
+An Example query which will display all permission bindings to resources below a project is as follows:
+```
+gcloud asset search-all-iam-policies --scope="projects/${PROJECT_ID}"
+```
+
+
 ## Migrate Groups
 
 ### Existing Cloud Identity: Gather Groups and Generate Update Scripts
@@ -30,8 +40,8 @@ CUSTOMER_ID=[Cloud Identity ID]
 PROJECT_ID=[Project ID]
 
 printf 'y' |  gcloud services enable cloudresourcemanager.googleapis.com
-printf 'y' |  gcloud services enable cloudidentity.googleapis.com
 printf 'y' |  gcloud services enable cloudasset.googleapis.com
+printf 'y' |  gcloud services enable cloudidentity.googleapis.com
 
 gcloud config set project ${PROJECT_ID}
 
