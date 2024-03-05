@@ -24,7 +24,7 @@ Script Execution:  The script expects an organization id and CSV file name to be
 ```
 
 ## Resource-based Permissions
-Google's Cloud Asset Inventory (CAI) feature has a feature [which](https://cloud.google.com/sdk/gcloud/reference/asset/search-all-iam-policies) searches all IAM policies within the specified accessible scope, such as a project, folder or organization. Examples of this binding include BigQuery Datasets or Tables, KMS Keys, Individual Secrets in Secret Manager, Cloud Run Invoker permissions on a single service and many more.
+Google's Cloud Asset Inventory (CAI) feature has a feature which [searches](https://cloud.google.com/sdk/gcloud/reference/asset/search-all-iam-policies) all IAM policies within the specified accessible scope, such as a project, folder or organization. Examples of this binding include BigQuery Datasets or Tables, KMS Keys, Individual Secrets in Secret Manager, Cloud Run Invoker permissions on a single service and many more.
 
 An Example query which will display all permission bindings to resources below a project is as follows:
 ```
